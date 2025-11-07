@@ -13,14 +13,9 @@ import { UserFormModal } from '@/components/admin/UserFormModal';
 import { Search, UserPlus, Edit, Trash2, Ban, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
-type User = {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: 'ciclista' | 'comerciante' | 'creador_ruta' | 'administrador';
-  is_active: boolean;
-  created_at: string;
-};
+import { UserRole, Database } from '@/types/database';
+
+type User = Database['public']['Tables']['users']['Row'];
 
 export default function UsersManagement() {
   const queryClient = useQueryClient();
@@ -47,13 +42,13 @@ export default function UsersManagement() {
 
       if (searchTerm) {
         data = data.filter((user: User) =>
-          user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.email.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
 
       if (roleFilter !== 'all') {
-        data = data.filter((user: User) => user.rol === roleFilter);
+        data = data.filter((user: User) => user.role === roleFilter);
       }
 
       return data;
@@ -137,7 +132,7 @@ export default function UsersManagement() {
   });
 
   const getRoleBadge = (role: UserRole) => {
-    const variants: Record<UserRole, 'default' | 'success' | 'warning' | 'info'> = {
+    const variants: Record<UserRole, 'default' | 'success' | 'warning' | 'info' | 'danger'> = {
       ciclista: 'info',
       comerciante: 'success',
       creador_ruta: 'warning',
@@ -249,7 +244,7 @@ export default function UsersManagement() {
                             </span>
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{user.nombre}</p>
+                            <p className="font-medium text-gray-900">{user.full_name}</p>
                           </div>
                         </div>
                       </TableCell>

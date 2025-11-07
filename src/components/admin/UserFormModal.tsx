@@ -7,15 +7,7 @@ import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import type { Database } from '@/types/database';
 
-type User = {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: 'ciclista' | 'comerciante' | 'creador_ruta' | 'administrador';
-  is_active: boolean;
-  created_at: string;
-  phone?: string;
-};
+type User = Database['public']['Tables']['users']['Row'];
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -27,9 +19,9 @@ interface UserFormModalProps {
 
 export function UserFormModal({ isOpen, onClose, onSubmit, user, isLoading }: UserFormModalProps) {
   const [formData, setFormData] = useState({
-    nombre: '',
+    full_name: '',
     email: '',
-    rol: 'ciclista' as any,
+    role: 'ciclista' as any,
     phone: '',
     is_active: true,
   });
@@ -37,7 +29,7 @@ export function UserFormModal({ isOpen, onClose, onSubmit, user, isLoading }: Us
   useEffect(() => {
     if (user) {
       setFormData({
-        nombre: user.nombre,
+        full_name: user.full_name,
         email: user.email,
         role: user.role,
         phone: user.phone || '',
@@ -45,7 +37,7 @@ export function UserFormModal({ isOpen, onClose, onSubmit, user, isLoading }: Us
       });
     } else {
       setFormData({
-        nombre: '',
+        full_name: '',
         email: '',
         role: 'ciclista',
         phone: '',
@@ -69,8 +61,8 @@ export function UserFormModal({ isOpen, onClose, onSubmit, user, isLoading }: Us
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Nombre Completo"
-          value={formData.nombre}
-          onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+          value={formData.full_name}
+          onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
           required
         />
 
